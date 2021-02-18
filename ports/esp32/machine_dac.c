@@ -43,7 +43,7 @@ typedef struct _mdac_obj_t {
 } mdac_obj_t;
 
 STATIC const mdac_obj_t mdac_obj[] = {
-    {{&machine_dac_type}, GPIO_NUM_25, DAC_CHANNEL_1},
+    //{{&machine_dac_type}, GPIO_NUM_25, DAC_CHANNEL_1},
     {{&machine_dac_type}, GPIO_NUM_26, DAC_CHANNEL_2},
 };
 

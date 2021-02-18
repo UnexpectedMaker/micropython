@@ -125,6 +125,7 @@ STATIC void machine_timer_disable(machine_timer_obj_t *self) {
 
 STATIC void machine_timer_isr(void *self_in) {
     machine_timer_obj_t *self = self_in;
+    #if 0
     timg_dev_t *device = self->group ? &(TIMERG1) : &(TIMERG0);
 
     device->hw_timer[self->index].update = 1;
@@ -134,6 +135,7 @@ STATIC void machine_timer_isr(void *self_in) {
         device->int_clr_timers.t0 = 1;
     }
     device->hw_timer[self->index].config.alarm_en = self->repeat;
+    #endif
 
     mp_sched_schedule(self->callback, self);
     mp_hal_wake_main_task_from_isr();

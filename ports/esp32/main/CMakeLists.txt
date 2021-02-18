@@ -80,7 +80,6 @@ set(IDF_COMPONENTS
     bootloader_support
     bt
     driver
-    esp32
     esp_common
     esp_eth
     esp_event
@@ -117,6 +116,12 @@ if(IDF_VERSION_MINOR GREATER_EQUAL 3)
     list(APPEND IDF_COMPONENTS esp_hw_support)
     list(APPEND IDF_COMPONENTS esp_pm)
     list(APPEND IDF_COMPONENTS hal)
+endif()
+
+if(IDF_TARGET STREQUAL "esp32")
+    list(APPEND IDF_COMPONENTS esp32)
+elseif(IDF_TARGET STREQUAL "esp32s2")
+    list(APPEND IDF_COMPONENTS esp32s2)
 endif()
 
 # Register the main IDF component.

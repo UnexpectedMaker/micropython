@@ -133,6 +133,7 @@ STATIC mp_obj_t esp32_wake_on_ext1(size_t n_args, const mp_obj_t *pos_args, mp_m
 STATIC MP_DEFINE_CONST_FUN_OBJ_KW(esp32_wake_on_ext1_obj, 0, esp32_wake_on_ext1);
 
 STATIC mp_obj_t esp32_raw_temperature(void) {
+    #if 0
     SET_PERI_REG_BITS(SENS_SAR_MEAS_WAIT2_REG, SENS_FORCE_XPD_SAR, 3, SENS_FORCE_XPD_SAR_S);
     SET_PERI_REG_BITS(SENS_SAR_TSENS_CTRL_REG, SENS_TSENS_CLK_DIV, 10, SENS_TSENS_CLK_DIV_S);
     CLEAR_PERI_REG_MASK(SENS_SAR_TSENS_CTRL_REG, SENS_TSENS_POWER_UP);
@@ -145,12 +146,19 @@ STATIC mp_obj_t esp32_raw_temperature(void) {
     int res = GET_PERI_REG_BITS2(SENS_SAR_SLAVE_ADDR3_REG, SENS_TSENS_OUT, SENS_TSENS_OUT_S);
 
     return mp_obj_new_int(res);
+    #else
+    return MP_OBJ_NEW_SMALL_INT(-1);
+    #endif
 }
 STATIC MP_DEFINE_CONST_FUN_OBJ_0(esp32_raw_temperature_obj, esp32_raw_temperature);
 
 STATIC mp_obj_t esp32_hall_sensor(void) {
+    #if 0
     adc1_config_width(ADC_WIDTH_12Bit);
     return MP_OBJ_NEW_SMALL_INT(hall_sensor_read());
+    #else
+    return MP_OBJ_NEW_SMALL_INT(-1);
+    #endif
 }
 STATIC MP_DEFINE_CONST_FUN_OBJ_0(esp32_hall_sensor_obj, esp32_hall_sensor);
 
@@ -188,7 +196,9 @@ STATIC const mp_rom_map_elem_t esp32_module_globals_table[] = {
 
     { MP_ROM_QSTR(MP_QSTR_Partition), MP_ROM_PTR(&esp32_partition_type) },
     { MP_ROM_QSTR(MP_QSTR_RMT), MP_ROM_PTR(&esp32_rmt_type) },
+    #if CONFIG_IDF_TARGET_ESP32
     { MP_ROM_QSTR(MP_QSTR_ULP), MP_ROM_PTR(&esp32_ulp_type) },
+    #endif
 
     { MP_ROM_QSTR(MP_QSTR_WAKEUP_ALL_LOW), MP_ROM_FALSE },
     { MP_ROM_QSTR(MP_QSTR_WAKEUP_ANY_HIGH), MP_ROM_TRUE },

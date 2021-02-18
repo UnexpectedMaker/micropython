@@ -1,6 +1,7 @@
 # MicroPython on ESP32, ESP IDF configuration
 # The following options override the defaults
 
+# Note: must use export IDF_TARGET=esp32s2 in environment to select S2
 CONFIG_IDF_TARGET="esp32"
 CONFIG_IDF_FIRMWARE_CHIP_ID=0x0000
 

@@ -27,7 +27,7 @@
 #include "py/runtime.h"
 #include "py/mphal.h"
 #include "usb.h"
-
+#if CONFIG_USB_ENABLED
 #include "tinyusb.h"
 #include "tusb_cdc_acm.h"
 
@@ -86,3 +86,4 @@ void usb_tx_strn(const char *str, size_t len) {
         len -= l;
     }
 }
+#endif

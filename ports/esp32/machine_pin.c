@@ -54,6 +54,7 @@ typedef struct _machine_pin_irq_obj_t {
     gpio_num_t id;
 } machine_pin_irq_obj_t;
 
+#if CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3
 STATIC const machine_pin_obj_t machine_pin_obj[] = {
     {{&machine_pin_type}, GPIO_NUM_0},
     {{&machine_pin_type}, GPIO_NUM_1},
@@ -96,6 +97,35 @@ STATIC const machine_pin_obj_t machine_pin_obj[] = {
     {{&machine_pin_type}, GPIO_NUM_38},
     {{&machine_pin_type}, GPIO_NUM_39},
 };
+#else
+STATIC const machine_pin_obj_t machine_pin_obj[] = {
+    {{&machine_pin_type}, GPIO_NUM_0},
+    {{&machine_pin_type}, GPIO_NUM_1},
+    {{&machine_pin_type}, GPIO_NUM_2},
+    {{&machine_pin_type}, GPIO_NUM_3},
+    {{&machine_pin_type}, GPIO_NUM_4},
+    {{&machine_pin_type}, GPIO_NUM_5},
+    {{&machine_pin_type}, GPIO_NUM_6},
+    {{&machine_pin_type}, GPIO_NUM_7},
+    {{&machine_pin_type}, GPIO_NUM_8},
+    {{&machine_pin_type}, GPIO_NUM_9},
+    {{&machine_pin_type}, GPIO_NUM_10},
+    {{&machine_pin_type}, GPIO_NUM_11},
+    {{&machine_pin_type}, GPIO_NUM_12},
+    {{&machine_pin_type}, GPIO_NUM_13},
+    {{&machine_pin_type}, GPIO_NUM_14},
+    {{&machine_pin_type}, GPIO_NUM_15},
+    {{&machine_pin_type}, GPIO_NUM_16},
+    {{&machine_pin_type}, GPIO_NUM_17},
+    {{&machine_pin_type}, GPIO_NUM_18},
+    {{&machine_pin_type}, GPIO_NUM_19},
+    {{&machine_pin_type}, GPIO_NUM_20},
+    {{&machine_pin_type}, GPIO_NUM_21},
+    {{&machine_pin_type}, GPIO_NUM_22},
+
+};
+
+#endif
 
 // forward declaration
 STATIC const machine_pin_irq_obj_t machine_pin_irq_object[];
@@ -388,6 +418,7 @@ const mp_obj_type_t machine_pin_type = {
 
 STATIC const mp_obj_type_t machine_pin_irq_type;
 
+#if CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3
 STATIC const machine_pin_irq_obj_t machine_pin_irq_object[] = {
     {{&machine_pin_irq_type}, GPIO_NUM_0},
     {{&machine_pin_irq_type}, GPIO_NUM_1},
@@ -430,6 +461,35 @@ STATIC const machine_pin_irq_obj_t machine_pin_irq_object[] = {
     {{&machine_pin_irq_type}, GPIO_NUM_38},
     {{&machine_pin_irq_type}, GPIO_NUM_39},
 };
+#else
+STATIC const machine_pin_irq_obj_t machine_pin_irq_object[] = {
+    {{&machine_pin_irq_type}, GPIO_NUM_0},
+    {{&machine_pin_irq_type}, GPIO_NUM_1},
+    {{&machine_pin_irq_type}, GPIO_NUM_2},
+    {{&machine_pin_irq_type}, GPIO_NUM_3},
+    {{&machine_pin_irq_type}, GPIO_NUM_4},
+    {{&machine_pin_irq_type}, GPIO_NUM_5},
+    {{&machine_pin_irq_type}, GPIO_NUM_6},
+    {{&machine_pin_irq_type}, GPIO_NUM_7},
+    {{&machine_pin_irq_type}, GPIO_NUM_8},
+    {{&machine_pin_irq_type}, GPIO_NUM_9},
+    {{&machine_pin_irq_type}, GPIO_NUM_10},
+    {{&machine_pin_irq_type}, GPIO_NUM_11},
+    {{&machine_pin_irq_type}, GPIO_NUM_12},
+    {{&machine_pin_irq_type}, GPIO_NUM_13},
+    {{&machine_pin_irq_type}, GPIO_NUM_14},
+    {{&machine_pin_irq_type}, GPIO_NUM_15},
+    {{&machine_pin_irq_type}, GPIO_NUM_16},
+    {{&machine_pin_irq_type}, GPIO_NUM_17},
+    {{&machine_pin_irq_type}, GPIO_NUM_18},
+    {{&machine_pin_irq_type}, GPIO_NUM_19},
+    {{&machine_pin_irq_type}, GPIO_NUM_20},
+    {{&machine_pin_irq_type}, GPIO_NUM_21},
+    {{&machine_pin_irq_type}, GPIO_NUM_22},
+
+};
+
+#endif
 
 STATIC mp_obj_t machine_pin_irq_call(mp_obj_t self_in, size_t n_args, size_t n_kw, const mp_obj_t *args) {
     machine_pin_irq_obj_t *self = self_in;

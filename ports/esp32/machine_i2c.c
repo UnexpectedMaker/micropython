@@ -38,8 +38,10 @@
 #define I2C_1_DEFAULT_SCL (GPIO_NUM_25)
 #define I2C_1_DEFAULT_SDA (GPIO_NUM_26)
 #else
-#define I2C_1_DEFAULT_SCL (GPIO_NUM_27) // TODO
-#define I2C_1_DEFAULT_SDA (GPIO_NUM_26) // TODO
+    #if CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3
+    #define I2C_1_DEFAULT_SCL (GPIO_NUM_27) // TODO
+    #define I2C_1_DEFAULT_SDA (GPIO_NUM_26) // TODO
+    #endif
 #endif
 
 #define I2C_DEFAULT_TIMEOUT_US (10000) // 10ms
@@ -148,6 +150,7 @@ mp_obj_t machine_hw_i2c_make_new(const mp_obj_type_t *type, size_t n_args, size_
         // Created for the first time, set default pins
         self->base.type = &machine_hw_i2c_type;
         self->port = i2c_id;
+        #if CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3
         if (self->port == I2C_NUM_0) {
             self->scl = I2C_0_DEFAULT_SCL;
             self->sda = I2C_0_DEFAULT_SDA;
@@ -155,6 +158,10 @@ mp_obj_t machine_hw_i2c_make_new(const mp_obj_type_t *type, size_t n_args, size_
             self->scl = I2C_1_DEFAULT_SCL;
             self->sda = I2C_1_DEFAULT_SDA;
         }
+        #else
+            self->scl = I2C_0_DEFAULT_SCL;
+            self->sda = I2C_0_DEFAULT_SDA;
+        #endif
         first_init = true;
     }
 

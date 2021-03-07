@@ -49,11 +49,14 @@ extern ringbuf_t stdin_ringbuf;
 void check_esp_err(esp_err_t code);
 
 uint32_t mp_hal_ticks_us(void);
+
+#if CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3
 __attribute__((always_inline)) static inline uint32_t mp_hal_ticks_cpu(void) {
     uint32_t ccount;
     __asm__ __volatile__ ("rsr %0,ccount" : "=a" (ccount));
     return ccount;
 }
+#endif
 
 void mp_hal_delay_us(uint32_t);
 #define mp_hal_delay_us_fast(us) ets_delay_us(us)

@@ -68,6 +68,7 @@ set(MICROPY_SOURCE_PORT
     ${PROJECT_DIR}/machine_sdcard.c
 )
 
+
 set(MICROPY_SOURCE_QSTR
     ${MICROPY_SOURCE_PY}
     ${MICROPY_SOURCE_EXTMOD}
@@ -75,6 +76,34 @@ set(MICROPY_SOURCE_QSTR
     ${MICROPY_SOURCE_LIB}
     ${MICROPY_SOURCE_PORT}
 )
+
+#set(IDF_COMPONENTS
+#    app_update
+#    bootloader_support
+#    bt
+#    driver
+#    esp_common
+#    esp_eth
+#    esp_event
+#    esp_ringbuf
+#    esp_rom
+#    esp_wifi
+#    freertos
+#    heap
+#    log
+#    lwip
+#    mbedtls
+#    mdns
+#    newlib
+#    nvs_flash
+#    sdmmc
+#    soc
+#    spi_flash
+#    tcpip_adapter
+#    ulp
+#    vfs
+#    xtensa
+#)
 
 set(IDF_COMPONENTS
     app_update
@@ -99,9 +128,7 @@ set(IDF_COMPONENTS
     soc
     spi_flash
     tcpip_adapter
-    ulp
     vfs
-    xtensa
 )
 
 if(IDF_VERSION_MINOR GREATER_EQUAL 1)
@@ -121,9 +148,24 @@ endif()
 
 if(IDF_TARGET STREQUAL "esp32")
     list(APPEND IDF_COMPONENTS esp32)
+    list(APPEND IDF_COMPONENTS ulp)
+    list(APPEND IDF_COMPONENTS xtensa)
+    #list(APPEND MICROPY_SOURCE_PORT ${PROJECT_DIR}/machine_dac.c)
 elseif(IDF_TARGET STREQUAL "esp32s2")
     list(APPEND IDF_COMPONENTS esp32s2)
+    list(APPEND IDF_COMPONENTS ulp)
+    list(APPEND IDF_COMPONENTS xtensa)
     list(APPEND IDF_COMPONENTS tinyusb)
+    #list(APPEND MICROPY_SOURCE_PORT ${PROJECT_DIR}/machine_dac.c)
+elseif(IDF_TARGET STREQUAL "esp32s3")
+    list(APPEND IDF_COMPONENTS esp32s3)
+    list(APPEND IDF_COMPONENTS ulp)
+    list(APPEND IDF_COMPONENTS xtensa)
+    #list(APPEND IDF_COMPONENTS tinyusb)
+    #list(APPEND MICROPY_SOURCE_PORT ${PROJECT_DIR}/machine_dac.c)
+elseif(IDF_TARGET STREQUAL "esp32c3")
+    list(APPEND IDF_COMPONENTS esp32c3)
+    list(APPEND IDF_COMPONENTS riscv)
 endif()
 
 # Register the main IDF component.
@@ -193,8 +235,8 @@ if(IDF_VERSION_MINOR GREATER_EQUAL 2)
     list(APPEND MICROPY_CPP_INC_EXTRA ${IDF_PATH}/components/soc/soc/${IDF_TARGET}/include)
     list(APPEND MICROPY_CPP_INC_EXTRA ${IDF_PATH}/components/soc/soc/include)
     if(IDF_VERSION_MINOR GREATER_EQUAL 3)
-        list(APPEND MICROPY_CPP_INC_EXTRA ${IDF_PATH}/components/tinyusb/additions/include)
-        list(APPEND MICROPY_CPP_INC_EXTRA ${IDF_PATH}/components/tinyusb/tinyusb/src)
+       # list(APPEND MICROPY_CPP_INC_EXTRA ${IDF_PATH}/components/tinyusb/additions/include)
+       # list(APPEND MICROPY_CPP_INC_EXTRA ${IDF_PATH}/components/tinyusb/tinyusb/src)
     endif()
 endif()
 

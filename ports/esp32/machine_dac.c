@@ -24,6 +24,7 @@
  * THE SOFTWARE.
  */
 
+#if CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3
 
 #include <stdio.h>
 
@@ -106,3 +107,5 @@ const mp_obj_type_t machine_dac_type = {
     .make_new = mdac_make_new,
     .locals_dict = (mp_obj_t)&mdac_locals_dict,
 };
+
+#endif

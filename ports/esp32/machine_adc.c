@@ -24,6 +24,7 @@
  * THE SOFTWARE.
  */
 
+#if 0
 
 #include <stdio.h>
 
@@ -60,7 +61,7 @@ STATIC mp_obj_t madc_make_new(const mp_obj_type_t *type, size_t n_args, size_t n
 
     static int initialized = 0;
     if (!initialized) {
-        #if CONFIG_IDF_TARGET_ESP32S2
+        #if CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3
         adc1_config_width(ADC_WIDTH_BIT_13);
         #else
         adc1_config_width(ADC_WIDTH_BIT_12);
@@ -145,7 +146,7 @@ STATIC mp_obj_t madc_width(mp_obj_t cls_in, mp_obj_t width_in) {
         case ADC_WIDTH_12Bit:
             adc_bit_width = 12;
             break;
-        #elif CONFIG_IDF_TARGET_ESP32S2
+        #elif CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3
         case ADC_WIDTH_BIT_13:
             adc_bit_width = 13;
             break;
@@ -175,7 +176,7 @@ STATIC const mp_rom_map_elem_t madc_locals_dict_table[] = {
     { MP_ROM_QSTR(MP_QSTR_WIDTH_10BIT), MP_ROM_INT(ADC_WIDTH_10Bit) },
     { MP_ROM_QSTR(MP_QSTR_WIDTH_11BIT), MP_ROM_INT(ADC_WIDTH_11Bit) },
     { MP_ROM_QSTR(MP_QSTR_WIDTH_12BIT), MP_ROM_INT(ADC_WIDTH_12Bit) },
-    #elif CONFIG_IDF_TARGET_ESP32S2
+    #elif CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3
     { MP_ROM_QSTR(MP_QSTR_WIDTH_13BIT), MP_ROM_INT(ADC_WIDTH_BIT_13) },
     #endif
 };
@@ -189,3 +190,5 @@ const mp_obj_type_t machine_adc_type = {
     .make_new = madc_make_new,
     .locals_dict = (mp_obj_t)&madc_locals_dict,
 };
+
+#endif

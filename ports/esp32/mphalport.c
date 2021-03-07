@@ -32,7 +32,16 @@
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
+#if CONFIG_IDF_TARGET_ESP32
 #include "esp32/rom/uart.h"
+#elif CONFIG_IDF_TARGET_ESP32S2
+#include "esp32s2/rom/uart.h"
+#elif CONFIG_IDF_TARGET_ESP32S3
+#include "esp32s3/rom/uart.h"
+#elif CONFIG_IDF_TARGET_ESP32C3
+#include "esp32c3/rom/uart.h"
+#endif
+
 
 #include "py/obj.h"
 #include "py/objstr.h"
@@ -114,7 +123,7 @@ void mp_hal_stdout_tx_strn(const char *str, uint32_t len) {
     for (uint32_t i = 0; i < len; ++i) {
         uart_tx_one_char(str[i]);
     }
-    usb_tx_strn(str, len);
+    // usb_tx_strn(str, len);
     if (release_gil) {
         MP_THREAD_GIL_ENTER();
     }

@@ -34,14 +34,23 @@
 #include "freertos/task.h"
 #include "esp_sleep.h"
 #include "esp_pm.h"
-#include "driver/touch_pad.h"
+
 
 #if CONFIG_IDF_TARGET_ESP32
 #include "esp32/rom/rtc.h"
 #include "esp32/clk.h"
+#include "driver/touch_pad.h"
 #elif CONFIG_IDF_TARGET_ESP32S2
 #include "esp32s2/rom/rtc.h"
 #include "esp32s2/clk.h"
+#include "driver/touch_pad.h"
+#elif CONFIG_IDF_TARGET_ESP32S3
+#include "esp32s3/rom/rtc.h"
+#include "esp32s3/clk.h"
+#include "driver/touch_pad.h"
+#elif CONFIG_IDF_TARGET_ESP32C3
+#include "esp32c3/rom/rtc.h"
+#include "esp32c3/clk.h"
 #endif
 
 #include "py/obj.h"
@@ -79,6 +88,10 @@ STATIC mp_obj_t machine_freq(size_t n_args, const mp_obj_t *args) {
         esp_pm_config_esp32_t pm;
         #elif CONFIG_IDF_TARGET_ESP32S2
         esp_pm_config_esp32s2_t pm;
+        #elif CONFIG_IDF_TARGET_ESP32S3
+        esp_pm_config_esp32s3_t pm;
+         #elif CONFIG_IDF_TARGET_ESP32C3
+        esp_pm_config_esp32c3_t pm;
         #endif
         pm.max_freq_mhz = freq;
         pm.min_freq_mhz = freq;
@@ -112,6 +125,8 @@ STATIC mp_obj_t machine_sleep_helper(wake_type_t wake_type, size_t n_args, const
         esp_sleep_enable_timer_wakeup(((uint64_t)expiry) * 1000);
     }
 
+#if SOC_PM_SUPPORT_EXT_WAKEUP
+
     if (machine_rtc_config.ext0_pin != -1 && (machine_rtc_config.ext0_wake_types & wake_type)) {
         esp_sleep_enable_ext0_wakeup(machine_rtc_config.ext0_pin, machine_rtc_config.ext0_level ? 1 : 0);
     }
@@ -122,11 +137,16 @@ STATIC mp_obj_t machine_sleep_helper(wake_type_t wake_type, size_t n_args, const
             machine_rtc_config.ext1_level ? ESP_EXT1_WAKEUP_ANY_HIGH : ESP_EXT1_WAKEUP_ALL_LOW);
     }
 
+#endif
+
+#if SOC_TOUCH_SENSOR_NUM > 0
+
     if (machine_rtc_config.wake_on_touch) {
         if (esp_sleep_enable_touchpad_wakeup() != ESP_OK) {
             mp_raise_msg(&mp_type_RuntimeError, MP_ERROR_TEXT("esp_sleep_enable_touchpad_wakeup() failed"));
         }
     }
+#endif
 
     switch (wake_type) {
         case MACHINE_WAKE_SLEEP:
@@ -259,7 +279,7 @@ STATIC const mp_rom_map_elem_t machine_module_globals_table[] = {
     #if CONFIG_IDF_TARGET_ESP32
     { MP_ROM_QSTR(MP_QSTR_TouchPad), MP_ROM_PTR(&machine_touchpad_type) },
     #endif
-    { MP_ROM_QSTR(MP_QSTR_ADC), MP_ROM_PTR(&machine_adc_type) },
+    // { MP_ROM_QSTR(MP_QSTR_ADC), MP_ROM_PTR(&machine_adc_type) },
     { MP_ROM_QSTR(MP_QSTR_DAC), MP_ROM_PTR(&machine_dac_type) },
     { MP_ROM_QSTR(MP_QSTR_I2C), MP_ROM_PTR(&machine_hw_i2c_type) },
     { MP_ROM_QSTR(MP_QSTR_SoftI2C), MP_ROM_PTR(&mp_machine_soft_i2c_type) },

@@ -35,8 +35,18 @@
 #include "py/mpthread.h"
 #include "gccollect.h"
 #include "soc/cpu.h"
-#include "xtensa/hal.h"
 
+#if CONFIG_IDF_TARGET_ESP32C3
+
+void gc_collect(void) {
+    gc_collect_start();
+    // gc_collect_inner(0);
+    gc_collect_end();
+}
+
+#else
+
+#include "xtensa/hal.h"
 
 static void gc_collect_inner(int level) {
     if (level < XCHAL_NUM_AREGS / 8) {
@@ -64,3 +74,5 @@ void gc_collect(void) {
     gc_collect_inner(0);
     gc_collect_end();
 }
+
+#endif

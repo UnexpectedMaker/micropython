@@ -81,7 +81,10 @@ void mp_task(void *pvParameter) {
     mp_thread_init(pxTaskGetStackStart(NULL), MP_TASK_STACK_SIZE / sizeof(uintptr_t));
     #endif
     uart_init();
-    // usb_init();
+
+    #if CONFIG_USB_ENABLED
+    usb_init();
+    #endif
 
     // TODO: CONFIG_SPIRAM_SUPPORT is for 3.3 compatibility, remove after move to 4.0.
     #if CONFIG_ESP32_SPIRAM_SUPPORT || CONFIG_SPIRAM_SUPPORT
@@ -217,6 +220,8 @@ void *esp_native_code_commit(void *buf, size_t len, void *reloc) {
     return p;
 }
 
+#if CONFIG_IDF_TARGET_ESP32S3
 float __ieee754_sqrtf(float x) {
     return x;
 }
+#endif

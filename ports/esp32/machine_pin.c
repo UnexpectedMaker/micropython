@@ -97,6 +97,116 @@ STATIC const machine_pin_obj_t machine_pin_obj[] = {
     {{&machine_pin_type}, GPIO_NUM_38},
     {{&machine_pin_type}, GPIO_NUM_39},
 };
+#elif CONFIG_IDF_TARGET_ESP32S2
+STATIC const machine_pin_obj_t machine_pin_obj[] = {
+    {{&machine_pin_type}, GPIO_NUM_0},
+    {{&machine_pin_type}, GPIO_NUM_1},
+    {{&machine_pin_type}, GPIO_NUM_2},
+    {{&machine_pin_type}, GPIO_NUM_3},
+    {{&machine_pin_type}, GPIO_NUM_4},
+    {{&machine_pin_type}, GPIO_NUM_5},
+    {{&machine_pin_type}, GPIO_NUM_6},
+    {{&machine_pin_type}, GPIO_NUM_7},
+    {{&machine_pin_type}, GPIO_NUM_8},
+    {{&machine_pin_type}, GPIO_NUM_9},
+    {{&machine_pin_type}, GPIO_NUM_10},
+    {{&machine_pin_type}, GPIO_NUM_11},
+    {{&machine_pin_type}, GPIO_NUM_12},
+    {{&machine_pin_type}, GPIO_NUM_13},
+    {{&machine_pin_type}, GPIO_NUM_14},
+    {{&machine_pin_type}, GPIO_NUM_15},
+    {{&machine_pin_type}, GPIO_NUM_16},
+    {{&machine_pin_type}, GPIO_NUM_17},
+    {{&machine_pin_type}, GPIO_NUM_18},
+#if CONFIG_USB_CDC_ENABLED
+    {{NULL}, -1}, // 19 is for native USB D-
+    {{NULL}, -1}, // 20 is for native USB D-
+#else
+    {{&machine_pin_type}, GPIO_NUM_19},
+    {{&machine_pin_type}, GPIO_NUM_20},
+#endif
+    {{&machine_pin_type}, GPIO_NUM_21},
+    {{NULL}, -1}, //Not a pin 22},
+    {{NULL}, -1}, //Not a pin 23},
+    {{NULL}, -1}, //Not a pin 24},
+    {{NULL}, -1}, //Not a pin 25},
+    {{NULL}, -1}, //{{&machine_pin_type}, GPIO_NUM_26} - FLASH/PSRAM
+    {{NULL}, -1}, //{{&machine_pin_type}, GPIO_NUM_27} - FLASH/PSRAM
+    {{NULL}, -1}, //{{&machine_pin_type}, GPIO_NUM_28} - FLASH/PSRAM
+    {{NULL}, -1}, //{{&machine_pin_type}, GPIO_NUM_29} - FLASH/PSRAM
+    {{NULL}, -1}, //{{&machine_pin_type}, GPIO_NUM_30} - FLASH/PSRAM
+    {{NULL}, -1}, //{{&machine_pin_type}, GPIO_NUM_31} - FLASH/PSRAM
+    {{NULL}, -1}, //{{&machine_pin_type}, GPIO_NUM_32} - FLASH/PSRAM
+    {{&machine_pin_type}, GPIO_NUM_33},
+    {{&machine_pin_type}, GPIO_NUM_34},
+    {{&machine_pin_type}, GPIO_NUM_35},
+    {{&machine_pin_type}, GPIO_NUM_36},
+    {{&machine_pin_type}, GPIO_NUM_37},
+    {{&machine_pin_type}, GPIO_NUM_38},
+    {{&machine_pin_type}, GPIO_NUM_39}, // MTCLK
+    {{&machine_pin_type}, GPIO_NUM_40}, // MTDO
+    {{&machine_pin_type}, GPIO_NUM_41}, // MTDI
+    {{&machine_pin_type}, GPIO_NUM_42}, // MTMS
+    {{&machine_pin_type}, GPIO_NUM_43}, // U0TXD
+    {{&machine_pin_type}, GPIO_NUM_44}, // U0RXD
+    {{&machine_pin_type}, GPIO_NUM_45},
+    {{&machine_pin_type}, GPIO_NUM_46},
+};
+#elif CONFIG_IDF_TARGET_ESP32S3
+STATIC const machine_pin_obj_t machine_pin_obj[] = {
+    {{&machine_pin_type}, GPIO_NUM_0},
+    {{&machine_pin_type}, GPIO_NUM_1},
+    {{&machine_pin_type}, GPIO_NUM_2},
+    {{&machine_pin_type}, GPIO_NUM_3},
+    {{&machine_pin_type}, GPIO_NUM_4},
+    {{&machine_pin_type}, GPIO_NUM_5},
+    {{&machine_pin_type}, GPIO_NUM_6},
+    {{&machine_pin_type}, GPIO_NUM_7},
+    {{&machine_pin_type}, GPIO_NUM_8},
+    {{&machine_pin_type}, GPIO_NUM_9},
+    {{&machine_pin_type}, GPIO_NUM_10},
+    {{&machine_pin_type}, GPIO_NUM_11},
+    {{&machine_pin_type}, GPIO_NUM_12},
+    {{&machine_pin_type}, GPIO_NUM_13},
+    {{&machine_pin_type}, GPIO_NUM_14},
+    {{&machine_pin_type}, GPIO_NUM_15},
+    {{&machine_pin_type}, GPIO_NUM_16},
+    {{&machine_pin_type}, GPIO_NUM_17},
+    {{&machine_pin_type}, GPIO_NUM_18},
+#if CONFIG_USB_CDC_ENABLED
+    {{NULL}, -1}, // 19 is for native USB D-
+    {{NULL}, -1}, // 20 is for native USB D-
+#else
+    {{&machine_pin_type}, GPIO_NUM_19},
+    {{&machine_pin_type}, GPIO_NUM_20},
+#endif
+    {{&machine_pin_type}, GPIO_NUM_21},
+    {{NULL}, -1}, //Not a pin 22},
+    {{NULL}, -1}, //Not a pin 23},
+    {{NULL}, -1}, //Not a pin 24},
+    {{NULL}, -1}, //Not a pin 25},
+    {{NULL}, -1}, //{{&machine_pin_type}, GPIO_NUM_26} - FLASH/PSRAM
+    {{NULL}, -1}, //{{&machine_pin_type}, GPIO_NUM_27} - FLASH/PSRAM
+    {{NULL}, -1}, //{{&machine_pin_type}, GPIO_NUM_28} - FLASH/PSRAM
+    {{NULL}, -1}, //{{&machine_pin_type}, GPIO_NUM_29} - FLASH/PSRAM
+    {{NULL}, -1}, //{{&machine_pin_type}, GPIO_NUM_30} - FLASH/PSRAM
+    {{NULL}, -1}, //{{&machine_pin_type}, GPIO_NUM_31} - FLASH/PSRAM
+    {{NULL}, -1}, //{{&machine_pin_type}, GPIO_NUM_32} - FLASH/PSRAM
+    {{&machine_pin_type}, GPIO_NUM_33},
+    {{&machine_pin_type}, GPIO_NUM_34},
+    {{&machine_pin_type}, GPIO_NUM_35},
+    {{&machine_pin_type}, GPIO_NUM_36},
+    {{&machine_pin_type}, GPIO_NUM_37},
+    {{&machine_pin_type}, GPIO_NUM_38},
+    {{&machine_pin_type}, GPIO_NUM_39}, // MTCLK
+    {{&machine_pin_type}, GPIO_NUM_40}, // MTDO
+    {{&machine_pin_type}, GPIO_NUM_41}, // MTDI
+    {{&machine_pin_type}, GPIO_NUM_42}, // MTMS
+    {{&machine_pin_type}, GPIO_NUM_43}, // U0TXD
+    {{&machine_pin_type}, GPIO_NUM_44}, // U0RXD
+    {{&machine_pin_type}, GPIO_NUM_45},
+    {{&machine_pin_type}, GPIO_NUM_46},
+};
 #else
 STATIC const machine_pin_obj_t machine_pin_obj[] = {
     {{&machine_pin_type}, GPIO_NUM_0},

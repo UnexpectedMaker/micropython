@@ -24,15 +24,13 @@
  * THE SOFTWARE.
  */
 
-#if CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3
+// #if CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3
 
 #include <stdio.h>
 
 #include "esp_log.h"
-
 #include "driver/gpio.h"
 #include "driver/dac.h"
-
 #include "py/runtime.h"
 #include "py/mphal.h"
 #include "modmachine.h"
@@ -44,8 +42,16 @@ typedef struct _mdac_obj_t {
 } mdac_obj_t;
 
 STATIC const mdac_obj_t mdac_obj[] = {
-    //{{&machine_dac_type}, GPIO_NUM_25, DAC_CHANNEL_1},
+#if CONFIG_IDF_TARGET_ESP32
+    {{&machine_dac_type}, GPIO_NUM_25, DAC_CHANNEL_1},
     {{&machine_dac_type}, GPIO_NUM_26, DAC_CHANNEL_2},
+#elif CONFIG_IDF_TARGET_ESP32S2
+    {{&machine_dac_type}, GPIO_NUM_17, DAC_CHANNEL_1},
+    {{&machine_dac_type}, GPIO_NUM_18, DAC_CHANNEL_2},
+#elif CONFIG_IDF_TARGET_ESP32S3
+    {{&machine_dac_type}, GPIO_NUM_25, DAC_CHANNEL_1},
+    {{&machine_dac_type}, GPIO_NUM_26, DAC_CHANNEL_2},
+#endif
 };
 
 STATIC mp_obj_t mdac_make_new(const mp_obj_type_t *type, size_t n_args, size_t n_kw,
@@ -108,4 +114,4 @@ const mp_obj_type_t machine_dac_type = {
     .locals_dict = (mp_obj_t)&mdac_locals_dict,
 };
 
-#endif
+// #endif

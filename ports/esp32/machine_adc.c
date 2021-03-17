@@ -24,14 +24,19 @@
  * THE SOFTWARE.
  */
 
-#if 0
-
 #include <stdio.h>
 
 #include "esp_log.h"
-
 #include "driver/gpio.h"
 #include "driver/adc.h"
+
+// #if CONFIG_IDF_TARGET_ESP32
+// #include "esp32/driver/include/adc.h"
+// #elif CONFIG_IDF_TARGET_ESP32S2
+// #include "esp32s2/driver/include/adc.h"
+// #elif CONFIG_IDF_TARGET_ESP32S3
+// #include "esp32s3/driver/include/adc.h"
+// #endif
 
 #include "py/runtime.h"
 #include "py/mphal.h"
@@ -190,5 +195,3 @@ const mp_obj_type_t machine_adc_type = {
     .make_new = madc_make_new,
     .locals_dict = (mp_obj_t)&madc_locals_dict,
 };
-
-#endif

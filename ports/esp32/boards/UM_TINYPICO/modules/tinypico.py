@@ -1,5 +1,5 @@
 # TinyPICO MicroPython Helper Library
-# 2019 Seon Rozenblum, Matt Trentini
+# 2019 Seon Rozenblum
 #
 # Project home:
 #   https://github.com/TinyPICO
@@ -45,7 +45,7 @@ DAC2 = const(26)
 def get_battery_voltage():
     """
     Returns the current battery voltage. If no battery is connected, returns 3.7V
-    This is an approximation only, but useful to detect of the charge state of the battery is getting low.
+    This is an approximation only, but useful to detect if teh voltage of the battery is getting low.
     """
     adc = ADC(Pin(BAT_VOLTAGE))  # Assign the ADC pin to read
     measuredvbat = adc.read()  # Read the value

@@ -29,15 +29,6 @@
 #include "esp_log.h"
 #include "driver/gpio.h"
 #include "driver/adc.h"
-
-// #if CONFIG_IDF_TARGET_ESP32
-// #include "esp32/driver/include/adc.h"
-// #elif CONFIG_IDF_TARGET_ESP32S2
-// #include "esp32s2/driver/include/adc.h"
-// #elif CONFIG_IDF_TARGET_ESP32S3
-// #include "esp32s3/driver/include/adc.h"
-// #endif
-
 #include "py/runtime.h"
 #include "py/mphal.h"
 #include "modmachine.h"
@@ -49,6 +40,7 @@ typedef struct _madc_obj_t {
 } madc_obj_t;
 
 STATIC const madc_obj_t madc_obj[] = {
+      #if CONFIG_IDF_TARGET_ESP32
     {{&machine_adc_type}, GPIO_NUM_36, ADC1_CHANNEL_0},
     {{&machine_adc_type}, GPIO_NUM_37, ADC1_CHANNEL_1},
     {{&machine_adc_type}, GPIO_NUM_38, ADC1_CHANNEL_2},
@@ -57,6 +49,18 @@ STATIC const madc_obj_t madc_obj[] = {
     {{&machine_adc_type}, GPIO_NUM_33, ADC1_CHANNEL_5},
     {{&machine_adc_type}, GPIO_NUM_34, ADC1_CHANNEL_6},
     {{&machine_adc_type}, GPIO_NUM_35, ADC1_CHANNEL_7},
+    #elif CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3
+    {{&machine_adc_type}, GPIO_NUM_1, ADC1_CHANNEL_0},
+    {{&machine_adc_type}, GPIO_NUM_2, ADC1_CHANNEL_1},
+    {{&machine_adc_type}, GPIO_NUM_3, ADC1_CHANNEL_2},
+    {{&machine_adc_type}, GPIO_NUM_4, ADC1_CHANNEL_3},
+    {{&machine_adc_type}, GPIO_NUM_5, ADC1_CHANNEL_4},
+    {{&machine_adc_type}, GPIO_NUM_6, ADC1_CHANNEL_5},
+    {{&machine_adc_type}, GPIO_NUM_7, ADC1_CHANNEL_6},
+    {{&machine_adc_type}, GPIO_NUM_8, ADC1_CHANNEL_7},
+    {{&machine_adc_type}, GPIO_NUM_9, ADC1_CHANNEL_8},
+    {{&machine_adc_type}, GPIO_NUM_10, ADC1_CHANNEL_9},
+    #endif
 };
 
 STATIC uint8_t adc_bit_width;

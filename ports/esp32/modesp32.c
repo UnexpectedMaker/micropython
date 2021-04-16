@@ -30,11 +30,7 @@
 #include <time.h>
 #include <sys/time.h>
 #include "soc/rtc_cntl_reg.h"
-#if CONFIG_IDF_TARGET_ESP32C3
-
-#else
 #include "soc/sens_reg.h"
-#endif
 #include "driver/gpio.h"
 #include "driver/adc.h"
 #include "esp_heap_caps.h"

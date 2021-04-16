@@ -54,8 +54,9 @@ typedef struct _machine_pin_irq_obj_t {
     gpio_num_t id;
 } machine_pin_irq_obj_t;
 
-#if CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3
 STATIC const machine_pin_obj_t machine_pin_obj[] = {
+    #if CONFIG_IDF_TARGET_ESP32
+
     {{&machine_pin_type}, GPIO_NUM_0},
     {{&machine_pin_type}, GPIO_NUM_1},
     {{&machine_pin_type}, GPIO_NUM_2},
@@ -96,9 +97,9 @@ STATIC const machine_pin_obj_t machine_pin_obj[] = {
     {{&machine_pin_type}, GPIO_NUM_37},
     {{&machine_pin_type}, GPIO_NUM_38},
     {{&machine_pin_type}, GPIO_NUM_39},
-};
+
 #elif CONFIG_IDF_TARGET_ESP32S2
-STATIC const machine_pin_obj_t machine_pin_obj[] = {
+
     {{&machine_pin_type}, GPIO_NUM_0},
     {{&machine_pin_type}, GPIO_NUM_1},
     {{&machine_pin_type}, GPIO_NUM_2},
@@ -151,9 +152,9 @@ STATIC const machine_pin_obj_t machine_pin_obj[] = {
     {{&machine_pin_type}, GPIO_NUM_44}, // U0RXD
     {{&machine_pin_type}, GPIO_NUM_45},
     {{&machine_pin_type}, GPIO_NUM_46},
-};
+
 #elif CONFIG_IDF_TARGET_ESP32S3
-STATIC const machine_pin_obj_t machine_pin_obj[] = {
+
     {{&machine_pin_type}, GPIO_NUM_0},
     {{&machine_pin_type}, GPIO_NUM_1},
     {{&machine_pin_type}, GPIO_NUM_2},
@@ -206,9 +207,9 @@ STATIC const machine_pin_obj_t machine_pin_obj[] = {
     {{&machine_pin_type}, GPIO_NUM_44}, // U0RXD
     {{&machine_pin_type}, GPIO_NUM_45},
     {{&machine_pin_type}, GPIO_NUM_46},
-};
+
 #else
-STATIC const machine_pin_obj_t machine_pin_obj[] = {
+
     {{&machine_pin_type}, GPIO_NUM_0},
     {{&machine_pin_type}, GPIO_NUM_1},
     {{&machine_pin_type}, GPIO_NUM_2},
@@ -233,9 +234,9 @@ STATIC const machine_pin_obj_t machine_pin_obj[] = {
     {{&machine_pin_type}, GPIO_NUM_21},
     {{&machine_pin_type}, GPIO_NUM_22},
 
-};
-
 #endif
+
+};
 
 // forward declaration
 STATIC const machine_pin_irq_obj_t machine_pin_irq_object[];
@@ -306,7 +307,13 @@ STATIC mp_obj_t machine_pin_obj_init_helper(const machine_pin_obj_t *self, size_
     // configure mode
     if (args[ARG_mode].u_obj != mp_const_none) {
         mp_int_t pin_io_mode = mp_obj_get_int(args[ARG_mode].u_obj);
-        if (self->id >= 34 && (pin_io_mode & GPIO_MODE_DEF_OUTPUT)) {
+        #if CONFIG_IDF_TARGET_ESP32
+        int max_inout_pin = 34;
+        #else
+        int max_inout_pin = 46;
+        #endif
+        // printf("max_inout_pin %d", max_inout_pin);
+        if (self->id >=max_inout_pin && (pin_io_mode & GPIO_MODE_DEF_OUTPUT)) {
             mp_raise_ValueError(MP_ERROR_TEXT("pin can only be input"));
         } else {
             gpio_set_direction(self->id, pin_io_mode);

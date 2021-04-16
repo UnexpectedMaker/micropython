@@ -123,7 +123,9 @@ void mp_hal_stdout_tx_strn(const char *str, uint32_t len) {
     for (uint32_t i = 0; i < len; ++i) {
         uart_tx_one_char(str[i]);
     }
-    // usb_tx_strn(str, len);
+    #if CONFIG_USB_CDC_ENABLED
+    usb_tx_strn(str, len);
+    #endif
     if (release_gil) {
         MP_THREAD_GIL_ENTER();
     }

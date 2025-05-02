@@ -39,6 +39,10 @@
 #include "modmachine.h"
 #include "machine_rtc.h"
 
+#if MICROPY_PY_MACHINE_RGB
+extern const mp_obj_type_t machine_rgb_type;
+#endif
+
 #if MICROPY_HW_ENABLE_SDCARD
 #define MICROPY_PY_MACHINE_SDCARD_ENTRY { MP_ROM_QSTR(MP_QSTR_SDCard), MP_ROM_PTR(&machine_sdcard_type) },
 #else
@@ -49,6 +53,15 @@
 #define MICROPY_PY_MACHINE_TOUCH_PAD_ENTRY { MP_ROM_QSTR(MP_QSTR_TouchPad), MP_ROM_PTR(&machine_touchpad_type) },
 #else
 #define MICROPY_PY_MACHINE_TOUCH_PAD_ENTRY
+#endif
+
+// Added by Seon
+// Conditional entry for the RGB peripheral
+#if MICROPY_PY_MACHINE_RGB
+#define MICROPY_PY_MACHINE_RGB_ENTRY \
+    { MP_ROM_QSTR(MP_QSTR_RGB), MP_ROM_PTR(&machine_rgb_type) },
+#else
+#define MICROPY_PY_MACHINE_RGB_ENTRY
 #endif
 
 #define MICROPY_PY_MACHINE_EXTRA_GLOBALS \
@@ -79,6 +92,9 @@
     { MP_ROM_QSTR(MP_QSTR_TIMER_WAKE), MP_ROM_INT(ESP_SLEEP_WAKEUP_TIMER) }, \
     { MP_ROM_QSTR(MP_QSTR_TOUCHPAD_WAKE), MP_ROM_INT(ESP_SLEEP_WAKEUP_TOUCHPAD) }, \
     { MP_ROM_QSTR(MP_QSTR_ULP_WAKE), MP_ROM_INT(ESP_SLEEP_WAKEUP_ULP) }, \
+	\
+	/* Added by seon */ \
+	MICROPY_PY_MACHINE_RGB_ENTRY \
 
 typedef enum {
     MP_PWRON_RESET = 1,

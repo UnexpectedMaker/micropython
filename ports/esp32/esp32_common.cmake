@@ -149,6 +149,14 @@ list(APPEND MICROPY_SOURCE_PORT
     machine_sdcard.c
     modespnow.c
 )
+
+# Only include our RGB glue on S3 builds
+if (CONFIG_IDF_TARGET_ESP32S3)
+    list(APPEND MICROPY_SOURCE_PORT
+        machine_rgb.c
+    )
+endif()
+
 list(TRANSFORM MICROPY_SOURCE_PORT PREPEND ${MICROPY_PORT_DIR}/)
 list(APPEND MICROPY_SOURCE_PORT ${CMAKE_BINARY_DIR}/pins.c)
 
@@ -174,6 +182,7 @@ list(APPEND IDF_COMPONENTS
     esp_eth
     esp_event
     esp_hw_support
+	esp_lcd
     esp_netif
     esp_partition
     esp_pm

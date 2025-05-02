@@ -1,0 +1,33 @@
+{
+    "deploy": [
+        "./deploy_flashmode.md",
+        "../deploy_nativeusb.md"
+    ],
+    "deploy_options": {
+        "flash_offset": "0"
+    },
+    "docs": "",
+    "features": [
+        "Battery Charging",
+        "External RAM",
+        "WiFi",
+        "BLE"
+    ],
+    "features_non_filterable": [
+		"480x480 RGB Display",
+		"Capacative Touch",
+        "I2C BAT Fuel Gauge",
+		"I2S Audio & Speaker",
+		"Haptic Driver & Motor",
+		"Low Power I2C RTC",
+		"uSD Card Socket"
+    ],
+    "images": [
+        "unexpectedmaker_squixl.jpg"
+    ],
+    "mcu": "esp32s3",
+    "product": "SQUiXL",
+    "thumbnail": "",
+    "url": "https://squixl.io",
+    "vendor": "Unexpected Maker"
+}

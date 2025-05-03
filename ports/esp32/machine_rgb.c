@@ -29,7 +29,7 @@ typedef struct _machine_rgb_obj_t {
 static mp_obj_t machine_rgb_make_new(const mp_obj_type_t *type,
                                      size_t n_args, size_t n_kw,
                                      const mp_obj_t *args) {
-    # DEBUG_printf("make_new start");
+    // DEBUG_printf("make_new start");
     enum {
         ARG_width, ARG_height, ARG_data_pins, ARG_hsync, ARG_vsync, ARG_de, ARG_pclk, ARG_freq, ARG_num_fbs,
         ARG_psram_trans_align, ARG_sram_trans_align,
@@ -77,7 +77,7 @@ static mp_obj_t machine_rgb_make_new(const mp_obj_type_t *type,
     for (size_t i = 0; i < data_width; i++) {
         pins[i] = mp_obj_get_int(pins_obj[i]);
     }
-    # DEBUG_printf("pins loaded");
+    // DEBUG_printf("pins loaded");
 
     // Create object
     machine_rgb_obj_t *self = m_new_obj(machine_rgb_obj_t);
@@ -121,31 +121,31 @@ static mp_obj_t machine_rgb_make_new(const mp_obj_type_t *type,
     cfg.timings.vsync_front_porch = vals[ARG_vsync_front_porch].u_int;
     cfg.timings.flags.hsync_idle_low = vals[ARG_hsync_idle_low].u_bool;
     cfg.timings.flags.vsync_idle_low = vals[ARG_vsync_idle_low].u_bool;
-    # DEBUG_printf("cfg ready");
+    // DEBUG_printf("cfg ready");
 
     // Create and init panel
     esp_err_t err;
     err = esp_lcd_new_rgb_panel(&cfg, &self->panel);
-    # DEBUG_printf("new_rgb_panel err=%d", err);
+    // DEBUG_printf("new_rgb_panel err=%d", err);
 
     if (err != ESP_OK) {
         mp_raise_msg(&mp_type_RuntimeError, MP_ERROR_TEXT("new_rgb_panel failed"));
     }
 
     err = esp_lcd_panel_reset(self->panel);
-    # DEBUG_printf("reset err=%d", err);
+    // DEBUG_printf("reset err=%d", err);
     if (err != ESP_OK) {
         mp_raise_msg(&mp_type_RuntimeError, MP_ERROR_TEXT("panel_reset failed"));
     }
     err = esp_lcd_panel_init(self->panel);
-    # DEBUG_printf("init err=%d", err);
+    // DEBUG_printf("init err=%d", err);
     if (err != ESP_OK) {
         mp_raise_msg(&mp_type_RuntimeError, MP_ERROR_TEXT("panel_init failed"));
     }
 
 	void *fb;
     err = esp_lcd_rgb_panel_get_frame_buffer(self->panel, 1, &fb);
-	# DEBUG_printf("panel_get_framebuffer err=%d", err);
+	// DEBUG_printf("panel_get_framebuffer err=%d", err);
     if (err != ESP_OK) {
         mp_raise_msg(&mp_type_RuntimeError, MP_ERROR_TEXT("panel_get_framebuffer failed"));
     }
@@ -159,7 +159,7 @@ static mp_obj_t machine_rgb_make_new(const mp_obj_type_t *type,
 // deinit()
 static mp_obj_t machine_rgb_deinit(mp_obj_t self_in) {
     machine_rgb_obj_t *self = MP_OBJ_TO_PTR(self_in);
-    # DEBUG_printf("deinit");
+    // DEBUG_printf("deinit");
     esp_lcd_panel_del(self->panel);
     return mp_const_none;
 }

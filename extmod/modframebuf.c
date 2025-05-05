@@ -526,10 +526,58 @@ static void draw_ellipse_points(const mp_obj_framebuf_t *fb, mp_int_t cx, mp_int
     }
 }
 
+static void draw_ellipse(const mp_obj_framebuf_t *fb, mp_int_t x, mp_int_t y, mp_int_t rx, mp_int_t ry, mp_int_t col, mp_int_t mask) {
+
+    mp_int_t two_asquare = 2 * rx * rx;
+    mp_int_t two_bsquare = 2 * ry * ry;
+    mp_int_t x2 = rx;
+    mp_int_t y2 = 0;
+    mp_int_t xchange = ry * ry * (1 - 2 * rx);
+    mp_int_t ychange = rx * rx;
+    mp_int_t ellipse_error = 0;
+    mp_int_t stoppingx = two_bsquare * rx;
+    mp_int_t stoppingy = 0;
+    while (stoppingx >= stoppingy) {   // 1st set of points,  y' > -1
+        draw_ellipse_points(fb, x, y, x2, y2, col, mask);
+        y2 += 1;
+        stoppingy += two_asquare;
+        ellipse_error += ychange;
+        ychange += two_asquare;
+        if ((2 * ellipse_error + xchange) > 0) {
+            x2 -= 1;
+            stoppingx -= two_bsquare;
+            ellipse_error += xchange;
+            xchange += two_bsquare;
+        }
+    }
+    // 1st point set is done start the 2nd set of points
+    x2 = 0;
+    y2 = ry;
+    xchange = ry * ry;
+    ychange = rx * rx * (1 - 2 * ry);
+    ellipse_error = 0;
+    stoppingx = 0;
+    stoppingy = two_asquare * ry;
+    while (stoppingx <= stoppingy) {  // 2nd set of points, y' < -1
+        draw_ellipse_points(fb, x, y, x2, y2, col, mask);
+        x2 += 1;
+        stoppingx += two_bsquare;
+        ellipse_error += xchange;
+        xchange += two_bsquare;
+        if ((2 * ellipse_error + ychange) > 0) {
+            y2 -= 1;
+            stoppingy -= two_asquare;
+            ellipse_error += ychange;
+            ychange += two_asquare;
+        }
+    }
+}
+
 static mp_obj_t framebuf_ellipse(size_t n_args, const mp_obj_t *args_in) {
     mp_obj_framebuf_t *self = MP_OBJ_TO_PTR(args_in[0]);
     mp_int_t args[5];
     framebuf_args(args_in, args, 5); // cx, cy, xradius, yradius, col
+
     mp_int_t mask = (n_args > 6 && mp_obj_is_true(args_in[6])) ? ELLIPSE_MASK_FILL : 0;
     if (n_args > 7) {
         mask |= mp_obj_get_int(args_in[7]) & ELLIPSE_MASK_ALL;
@@ -540,52 +588,80 @@ static mp_obj_t framebuf_ellipse(size_t n_args, const mp_obj_t *args_in) {
         setpixel_checked(self, args[0], args[1], args[4], mask & ELLIPSE_MASK_ALL);
         return mp_const_none;
     }
-    mp_int_t two_asquare = 2 * args[2] * args[2];
-    mp_int_t two_bsquare = 2 * args[3] * args[3];
-    mp_int_t x = args[2];
-    mp_int_t y = 0;
-    mp_int_t xchange = args[3] * args[3] * (1 - 2 * args[2]);
-    mp_int_t ychange = args[2] * args[2];
-    mp_int_t ellipse_error = 0;
-    mp_int_t stoppingx = two_bsquare * args[2];
-    mp_int_t stoppingy = 0;
-    while (stoppingx >= stoppingy) {   // 1st set of points,  y' > -1
-        draw_ellipse_points(self, args[0], args[1], x, y, args[4], mask);
-        y += 1;
-        stoppingy += two_asquare;
-        ellipse_error += ychange;
-        ychange += two_asquare;
-        if ((2 * ellipse_error + xchange) > 0) {
-            x -= 1;
-            stoppingx -= two_bsquare;
-            ellipse_error += xchange;
-            xchange += two_bsquare;
-        }
-    }
-    // 1st point set is done start the 2nd set of points
-    x = 0;
-    y = args[3];
-    xchange = args[3] * args[3];
-    ychange = args[2] * args[2] * (1 - 2 * args[3]);
-    ellipse_error = 0;
-    stoppingx = 0;
-    stoppingy = two_asquare * args[3];
-    while (stoppingx <= stoppingy) {  // 2nd set of points, y' < -1
-        draw_ellipse_points(self, args[0], args[1], x, y, args[4], mask);
-        x += 1;
-        stoppingx += two_bsquare;
-        ellipse_error += xchange;
-        xchange += two_bsquare;
-        if ((2 * ellipse_error + ychange) > 0) {
-            y -= 1;
-            stoppingy -= two_asquare;
-            ellipse_error += ychange;
-            ychange += two_asquare;
-        }
-    }
+
+    draw_ellipse(self, args[0], args[1], args[2], args[3], args[4], mask);
+    
     return mp_const_none;
 }
+
 static MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(framebuf_ellipse_obj, 6, 8, framebuf_ellipse);
+
+static mp_obj_t framebuf_rect_round(size_t n_args, const mp_obj_t *args_in) {
+    mp_obj_framebuf_t *self = MP_OBJ_TO_PTR(args_in[0]);
+    mp_int_t args[6]; // x, y, w, h, r, col, filled
+    framebuf_args(args_in, args, 6);
+
+    // We use the asme func for both filled and not filled round rects. If the fill bool is set, we need to check for it
+    // otherwise we default to non-filled
+    mp_int_t filled = 0;
+    if (n_args > 7 && mp_obj_is_true(args_in[7]))
+        filled = 1;
+
+    // Check if the radius is 0 or less, or if the radius is more than half the width or height, whichever is smaller.
+    // If either is true, we fall back to drawing a standard rect - filled or not.
+    mp_int_t shortest_length = (args[2] < args[3]) ? args[2] : args[3];
+    if (args[4] <= 0 || args[4] > shortest_length / 2)
+    {
+        if (filled)
+        {
+            fill_rect(self, args[0], args[1], args[2], args[3], args[5]);
+        }
+        else
+        {
+            fill_rect(self, args[0], args[1], args[2], 1, args[5]);
+            fill_rect(self, args[0], args[1] + args[3] - 1, args[2], 1, args[5]);
+            fill_rect(self, args[0], args[1], 1, args[3], args[5]);
+            fill_rect(self, args[0] + args[2] - 1, args[1], 1, args[3], args[5]);
+        }
+        return mp_const_none;
+    }
+
+    // Ok, it seems we are drawing a rounded corner rect - let's do it!
+    if (filled)
+    {
+        // Fill inner round rect
+        fill_rect(self, args[0] + args[4], args[1], args[2] - args[4] - args[4], args[3], args[5]);
+        fill_rect(self, args[0], args[1] + args[4], args[4], args[3] - args[4]- args[4], args[5]);
+        fill_rect(self, args[0] + args[2] - args[4], args[1] + args[4], args[4], args[3] - args[4]- args[4], args[5]);
+    }
+    else
+    {
+        // Top line
+        fill_rect(self, args[0] + args[4], args[1], args[2] - args[4] - args[4], 1, args[5]);
+        // Bottom line
+        fill_rect(self, args[0] + args[4], args[1] + args[3] - 1, args[2] - args[4] - args[4], 1, args[5]);
+        // Left line
+        fill_rect(self, args[0], args[1] + args[4], 1, args[3] - args[4] - args[4], args[5]);
+        // rRight line
+        fill_rect(self, args[0] + args[2] - 1, args[1] + args[4], 1, args[3] - args[4] - args[4], args[5]);
+    }
+    
+    mp_int_t mask = filled ? ELLIPSE_MASK_FILL : 0;
+
+    // Corners: We use quandrant masks to only have to draw the corner qudrant we want.
+    // TL
+    draw_ellipse(self, args[0] + args[4], args[1] + args[4], args[4], args[4], args[5], mask | ELLIPSE_MASK_Q2);
+    // BL
+    draw_ellipse(self, args[0] + args[4], args[1] + args[3] - 1 - args[4], args[4], args[4], args[5], mask | ELLIPSE_MASK_Q3);
+    // TR
+    draw_ellipse(self, args[0] + args[2] - 1 - args[4], args[1] + args[4], args[4], args[4], args[5], mask | ELLIPSE_MASK_Q1);
+    // BR
+    draw_ellipse(self, args[0] + args[2] - 1 - args[4], args[1] + args[3] - 1 - args[4], args[4], args[4], args[5], mask | ELLIPSE_MASK_Q4);
+
+    return mp_const_none;
+}
+
+static MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(framebuf_rect_round_obj, 7, 8, framebuf_rect_round);
 
 #if MICROPY_PY_ARRAY
 
@@ -860,6 +936,7 @@ static const mp_rom_map_elem_t framebuf_locals_dict_table[] = {
     { MP_ROM_QSTR(MP_QSTR_blit), MP_ROM_PTR(&framebuf_blit_obj) },
     { MP_ROM_QSTR(MP_QSTR_scroll), MP_ROM_PTR(&framebuf_scroll_obj) },
     { MP_ROM_QSTR(MP_QSTR_text), MP_ROM_PTR(&framebuf_text_obj) },
+    { MP_ROM_QSTR(MP_QSTR_rect_round), MP_ROM_PTR(&framebuf_rect_round_obj) },
 };
 static MP_DEFINE_CONST_DICT(framebuf_locals_dict, framebuf_locals_dict_table);
 

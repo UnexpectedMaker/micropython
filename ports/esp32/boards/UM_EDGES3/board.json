@@ -12,23 +12,15 @@
         "Battery Charging",
         "External Flash",
         "External RAM",
-        "Feather",
-        "JST-SH",
-        "RGB LED",
-        "USB-C",
         "WiFi"
     ],
     "features_non_filterable": [],
     "images": [
-        "unexpectedmaker_pros3.jpg"
+        "unexpectedmaker_edges3d.jpg"
     ],
     "mcu": "esp32s3",
-    "product": "ProS3",
+    "product": "EdgeS3[D]",
     "thumbnail": "",
-    "url": "https://pros3.io",
-    "variants": {
-        "PROS3": "ProS3",
-        "PROS3D": "ProS3[D]"
-    },
+    "url": "https://esp32s3.com/edges3d.html",
     "vendor": "Unexpected Maker"
 }
